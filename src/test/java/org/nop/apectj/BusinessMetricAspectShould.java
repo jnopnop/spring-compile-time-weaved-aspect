@@ -22,31 +22,31 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 public class BusinessMetricAspectShould {
 
-	@MockBean
-	private MetricService metricService;
+    @MockBean
+    private MetricService metricService;
 
-	@Autowired
-	private PaymentOperations paymentOperations;
+    @Autowired
+    private PaymentOperations paymentOperations;
 
-	@Autowired
+    @Autowired
     private ApplicationContext applicationContext;
 
-	@Test(expected = NoSuchBeanDefinitionException.class)
+    @Test(expected = NoSuchBeanDefinitionException.class)
     public void notBeRegisteredInContext() {
-	    applicationContext.getBean(SpringMetricAspect.class);
+        applicationContext.getBean(SpringMetricAspect.class);
     }
 
     @Test
     public void notWrapTargetObjectWithProxy() {
-	    assertThat((PaymentOperations) AopTestUtils.getTargetObject(paymentOperations)).isEqualTo(paymentOperations);
+        assertThat((PaymentOperations) AopTestUtils.getTargetObject(paymentOperations)).isEqualTo(paymentOperations);
     }
 
-	@Test
-	public void invokeMetricIncrementAfterTargetMethodSuccessfullyReturns() {
-		//when
-		paymentOperations.handlePurchase();
+    @Test
+    public void invokeMetricIncrementAfterTargetMethodSuccessfullyReturns() {
+        //when
+        paymentOperations.handlePurchase();
 
-		//then
-		verify(metricService, times(1)).increment(eq(PaymentOperations.PURCHASE_METRIC_NAME));
-	}
+        //then
+        verify(metricService, times(1)).increment(eq(PaymentOperations.PURCHASE_METRIC_NAME));
+    }
 }
